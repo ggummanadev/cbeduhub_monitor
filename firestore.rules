@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reports collection rules
+    match /reports/{reportId} {
+      allow create: if isValidId(reportId) && isValidReport(request.resource.data);
+      allow update: if isValidId(reportId) && isValidReport(request.resource.data) && request.resource.data.id == resource.data.id && request.resource.data.createdAt == resource.data.createdAt;
+      allow read: if true; // No-auth public list and get
+      allow delete: if false; // Deletion is not allowed from the client
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidReport(data) {
+      return data.id is string && data.id.size() <= 128
+        && data.createdAt is number
+        && data.lastUpdated is number
+        && (data.deviceId == null || (data.deviceId is string && data.deviceId.size() <= 128))
+        && data.programName is string && data.programName.size() <= 200
+        && data.location is string && data.location.size() <= 200
+        && data.visitDate is string && data.visitDate.size() <= 50
+        && data.learnerCount is string && data.learnerCount.size() <= 50
+        && data.instructorName is string && data.instructorName.size() <= 100
+        && data.managerName is string && data.managerName.size() <= 100
+        && data.submitterName is string && data.submitterName.size() <= 100
+        && (data.otherOpinion == null || (data.otherOpinion is string && data.otherOpinion.size() <= 2000))
+        && (data.submitterSign == null || (data.submitterSign is string && data.submitterSign.size() <= 500000))
+        && (data.photo1 == null || (data.photo1 is string && data.photo1.size() <= 1500000))
+        && (data.photo2 == null || (data.photo2 is string && data.photo2.size() <= 1500000))
+        && (data.photo3 == null || (data.photo3 is string && data.photo3.size() <= 1500000))
+        && (data.photo4 == null || (data.photo4 is string && data.photo4.size() <= 1500000))
+        && data.scores is list && data.scores.size() == 20;
+    }
+  }
+}

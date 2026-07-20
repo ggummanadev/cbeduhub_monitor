@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "MonitoringReport": {
+      "title": "MonitoringReport",
+      "description": "평생교육진흥본부 프로그램 모니터링 보고서",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "lastUpdated": { "type": "number" },
+        "deviceId": { "type": "string" },
+        "category": { "type": "string" },
+        "programName": { "type": "string" },
+        "location": { "type": "string" },
+        "visitDate": { "type": "string" },
+        "learnerCount": { "type": "string" },
+        "instructorName": { "type": "string" },
+        "managerName": { "type": "string" },
+        "scores": {
+          "type": "array",
+          "description": "20개의 평가 항목 점수 리스트 (각 1~5점)"
+        },
+        "otherOpinion": { "type": "string" },
+        "submitterName": { "type": "string" },
+        "submitterPhone": { "type": "string" },
+        "submitterSign": { "type": "string" },
+        "photo1": { "type": "string" },
+        "photo2": { "type": "string" },
+        "photo3": { "type": "string" },
+        "photo4": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "createdAt",
+        "lastUpdated",
+        "programName",
+        "location",
+        "visitDate",
+        "learnerCount",
+        "instructorName",
+        "managerName",
+        "submitterName"
+      ]
+    }
+  },
+  "firestore": {
+    "/reports/{reportId}": {
+      "schema": "MonitoringReport",
+      "description": "모니터링 담당자가 제출한 프로그램 모니터링 보고서 컬렉션"
+    }
+  }
+}
