@@ -69,17 +69,24 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             </h1>
 
             {/* Program Info Table */}
-            <table className="w-full border-collapse border-2 border-black text-xs mb-3 text-left">
+            <table className="w-full border-collapse border-2 border-black text-xs mb-3 text-left table-fixed">
+              <colgroup>
+                <col style={{ width: '15%' }} />
+                <col style={{ width: '12%' }} />
+                <col style={{ width: '18%' }} />
+                <col style={{ width: '25%' }} />
+                <col style={{ width: '30%' }} />
+              </colgroup>
               <tbody>
                 <tr>
-                  <td className="border border-black bg-gray-100 p-2 font-bold text-center w-24">프로그램명</td>
-                  <td className="border border-black p-2 font-semibold" style={{ width: '25%' }}>{data.programName || '-'}</td>
-                  <td className="border border-black bg-gray-100 p-2 font-bold text-center w-24">강의장소</td>
-                  <td className="border border-black p-2 font-semibold" style={{ width: '25%' }}>{data.location || '-'}</td>
+                  <td className="border border-black bg-gray-100 p-2 font-bold text-center">프로그램명</td>
+                  <td className="border border-black p-2 font-semibold" colSpan={2}>{data.programName || '-'}</td>
+                  <td className="border border-black bg-gray-100 p-2 font-bold text-center">강의장소</td>
+                  <td className="border border-black p-2 font-semibold">{data.location || '-'}</td>
                 </tr>
                 <tr>
                   <td className="border border-black bg-gray-100 p-2 font-bold text-center">방문일시</td>
-                  <td className="border border-black p-2 font-semibold">{formatKoreanDate(data.visitDate)}</td>
+                  <td className="border border-black p-2 font-semibold" colSpan={2}>{formatKoreanDate(data.visitDate)}</td>
                   <td className="border border-black bg-gray-100 p-2 font-bold text-center">학습자</td>
                   <td className="border border-black p-2 font-semibold">
                     {data.learnerCount ? `${data.learnerCount}명` : '-'}
@@ -87,18 +94,10 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 </tr>
                 <tr>
                   <td className="border border-black bg-gray-100 p-2 font-bold text-center">운영인원</td>
-                  <td className="border border-black p-0" colSpan={3}>
-                    <table className="w-full h-full border-none border-collapse text-xs">
-                      <tbody>
-                        <tr>
-                          <td className="border-r border-black bg-gray-50 p-2 font-bold text-center w-16">강사</td>
-                          <td className="border-r border-black p-2 font-semibold w-24 text-center">{data.instructorName || '-'}</td>
-                          <td className="border-r border-black bg-gray-50 p-2 font-bold text-center w-36">학습매니저/보조강사</td>
-                          <td className="p-2 font-semibold text-center">{data.managerName || '-'}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
+                  <td className="border border-black bg-gray-50 p-2 font-bold text-center">강사</td>
+                  <td className="border border-black p-2 font-semibold text-center">{data.instructorName || '-'}</td>
+                  <td className="border border-black bg-gray-50 p-2 font-bold text-center">학습매니저/보조강사</td>
+                  <td className="border border-black p-2 font-semibold text-center">{data.managerName || '-'}</td>
                 </tr>
               </tbody>
             </table>
@@ -261,20 +260,24 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
           </div>
 
           {/* Footer of Photo Page */}
-          <div className="pt-4 mt-auto text-center border-t border-gray-200 flex flex-col items-center justify-center">
-            <div className="flex items-center justify-center gap-2">
-              {/* Seowon University Lifelong Education Logo */}
-              <svg width="18" height="22" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                <defs>
-                  <linearGradient id="logo-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#55B6DC" />
-                    <stop offset="100%" stopColor="#141154" />
-                  </linearGradient>
-                </defs>
-                <path d="M 15,0 L 105,0 C 80,40 80,110 105,150 L 15,150 C 40,110 40,40 15,0 Z" fill="url(#logo-grad)" />
-                <text x="60" y="102" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="85" fill="#FFFFFF" textAnchor="middle">S</text>
-              </svg>
-              <span className="font-bold text-blue-800 text-base leading-none">서원대학교 평생교육진흥본부</span>
+          <div className="pt-4 mt-auto border-t border-gray-200 text-center">
+            <div className="inline-block" style={{ height: '22px', lineHeight: '22px' }}>
+              <span className="inline-block align-middle mr-2" style={{ height: '22px' }}>
+                {/* Seowon University Lifelong Education Logo */}
+                <svg width="18" height="22" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                  <defs>
+                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#55B6DC" />
+                      <stop offset="100%" stopColor="#141154" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M 15,0 L 105,0 C 80,40 80,110 105,150 L 15,150 C 40,110 40,40 15,0 Z" fill="url(#logo-grad)" />
+                  <text x="60" y="102" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="85" fill="#FFFFFF" textAnchor="middle">S</text>
+                </svg>
+              </span>
+              <span className="inline-block align-middle font-bold text-blue-800 text-base" style={{ height: '22px', lineHeight: '22px' }}>
+                서원대학교 평생교육진흥본부
+              </span>
             </div>
           </div>
         </div>
