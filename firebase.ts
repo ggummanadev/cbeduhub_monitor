@@ -15,12 +15,22 @@ const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope('https://www.googleapis.com/auth/drive.file');
 
 let cachedAccessToken: string | null = null;
+try {
+  cachedAccessToken = localStorage.getItem('baeknyeon_google_access_token');
+} catch (e) {
+  console.error("Failed to read google access token from localStorage", e);
+}
 
 export const signInWithGoogle = async (): Promise<User> => {
   const result = await signInWithPopup(auth, googleProvider);
   const credential = GoogleAuthProvider.credentialFromResult(result);
   if (credential?.accessToken) {
     cachedAccessToken = credential.accessToken;
+    try {
+      localStorage.setItem('baeknyeon_google_access_token', credential.accessToken);
+    } catch (e) {
+      console.error("Failed to save google access token", e);
+    }
   }
   return result.user;
 };
@@ -31,10 +41,22 @@ export const getGoogleAccessToken = (): string | null => {
 
 export const setGoogleAccessToken = (token: string | null) => {
   cachedAccessToken = token;
+  try {
+    if (token) {
+      localStorage.setItem('baeknyeon_google_access_token', token);
+    } else {
+      localStorage.removeItem('baeknyeon_google_access_token');
+    }
+  } catch (e) {
+    console.error("Failed to set google access token", e);
+  }
 };
 
 export const logoutUser = async (): Promise<void> => {
   await signOut(auth);
+  try {
+    localStorage.removeItem('baeknyeon_google_access_token');
+  } catch {}
 };
 
 // Test connection on boot as mandated by the Firebase Integration skill

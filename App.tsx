@@ -122,10 +122,26 @@ function App() {
       try {
         const { mode, currentReport } = JSON.parse(savedState);
         if (mode === 'editor' && currentReport) {
-          setData(currentReport);
+          const cachedPhotosStr = localStorage.getItem(`baeknyeon_photos_${currentReport.id}`);
+          let merged = { ...currentReport };
+          if (cachedPhotosStr) {
+            try {
+              const cached = JSON.parse(cachedPhotosStr);
+              merged = { ...merged, ...cached };
+            } catch {}
+          }
+          setData(merged);
           setAppMode('editor');
         } else if (mode === 'preview' && currentReport) {
-          setData(currentReport);
+          const cachedPhotosStr = localStorage.getItem(`baeknyeon_photos_${currentReport.id}`);
+          let merged = { ...currentReport };
+          if (cachedPhotosStr) {
+            try {
+              const cached = JSON.parse(cachedPhotosStr);
+              merged = { ...merged, ...cached };
+            } catch {}
+          }
+          setData(merged);
           setAppMode('preview');
         } else if (mode === 'list') {
           setAppMode('list');
@@ -138,7 +154,15 @@ function App() {
         console.error("State restore failed", e);
       }
     } else if (currentDraft) {
-      setData(currentDraft);
+      const cachedPhotosStr = localStorage.getItem(`baeknyeon_photos_${currentDraft.id}`);
+      let merged = { ...currentDraft };
+      if (cachedPhotosStr) {
+        try {
+          const cached = JSON.parse(cachedPhotosStr);
+          merged = { ...merged, ...cached };
+        } catch {}
+      }
+      setData(merged);
     }
 
     setIsLoaded(true);
@@ -148,6 +172,16 @@ function App() {
   useEffect(() => {
     if (isLoaded && (appMode === 'editor' || appMode === 'preview') && data.id) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+      // Separately cache photos by report ID to persist across list selections & saves
+      if (data.photo1 || data.photo2 || data.photo3 || data.photo4) {
+        localStorage.setItem(`baeknyeon_photos_${data.id}`, JSON.stringify({
+          photo1: data.photo1,
+          photo2: data.photo2,
+          photo3: data.photo3,
+          photo4: data.photo4,
+        }));
+      }
     }
   }, [data, appMode, isLoaded]);
 
@@ -284,7 +318,21 @@ function App() {
   };
 
   const selectReport = (report: MonitoringReport) => {
-    setData(report);
+    const cachedPhotosStr = localStorage.getItem(`baeknyeon_photos_${report.id}`);
+    if (cachedPhotosStr) {
+      try {
+        const cachedPhotos = JSON.parse(cachedPhotosStr);
+        setData({
+          ...report,
+          ...cachedPhotos
+        });
+      } catch (e) {
+        console.error("Failed to parse cached photos", e);
+        setData(report);
+      }
+    } else {
+      setData(report);
+    }
     setAppMode('preview');
   };
 
@@ -317,7 +365,26 @@ function App() {
       
       // Save directly to Firestore database
       const saved = await saveReport(data);
-      setData(saved);
+      
+      // Keep photos in active client state so they aren't lost in the UI/preview!
+      const updatedData = {
+        ...saved,
+        photo1: data.photo1,
+        photo2: data.photo2,
+        photo3: data.photo3,
+        photo4: data.photo4,
+      };
+      setData(updatedData);
+
+      // Explicitly cache photos by this report ID so they persist
+      if (data.photo1 || data.photo2 || data.photo3 || data.photo4) {
+        localStorage.setItem(`baeknyeon_photos_${data.id}`, JSON.stringify({
+          photo1: data.photo1,
+          photo2: data.photo2,
+          photo3: data.photo3,
+          photo4: data.photo4,
+        }));
+      }
       
       // Clear draft since it is successfully saved to Cloud DB
       localStorage.removeItem(STORAGE_KEY);
@@ -406,6 +473,9 @@ function App() {
     if (!printRef.current) return null;
 
     try {
+      // Give offscreen DOM and images enough time to fully load and render
+      await new Promise(resolve => setTimeout(resolve, 600));
+
       const element = printRef.current;
       const pages = Array.from(element.querySelectorAll('.page-break')) as HTMLElement[];
       
@@ -423,7 +493,6 @@ function App() {
         const canvas = await html2canvas(pages[i], {
           scale: 2.2,
           useCORS: true,
-          allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false,
           width: 794,
@@ -485,39 +554,43 @@ function App() {
         throw new Error("PDF 변환용 미리보기 요소를 찾을 수 없습니다.");
       }
 
-      const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+      // Unified single-request multipart/related upload to Google Drive v3
+      const boundary = 'foo_bar_boundary';
+      const delimiter = `\r\n--${boundary}\r\n`;
+      const close_delim = `\r\n--${boundary}--`;
+
+      const metadataPart = JSON.stringify({
+        name: pdfData.fileName,
+        mimeType: 'application/pdf',
+      });
+
+      const arrayBuffer = await pdfData.blob.arrayBuffer();
+      const uInt8Array = new Uint8Array(arrayBuffer);
+
+      const part1 = `${delimiter}Content-Type: application/json; charset=UTF-8\r\n\r\n${metadataPart}${delimiter}Content-Type: application/pdf\r\n\r\n`;
+      const part1Array = new TextEncoder().encode(part1);
+      const part3Array = new TextEncoder().encode(close_delim);
+
+      const multipartBlob = new Blob([part1Array, uInt8Array, part3Array], {
+        type: `multipart/related; boundary=${boundary}`
+      });
+
+      const uploadRes = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': `multipart/related; boundary=${boundary}`,
         },
-        body: JSON.stringify({
-          name: pdfData.fileName,
-          mimeType: 'application/pdf',
-        }),
-      });
-
-      if (!createRes.ok) {
-        const errJson = await createRes.json().catch(() => ({}));
-        throw new Error(errJson.error?.message || "구글 드라이브 파일 생성에 실패했습니다.");
-      }
-
-      const fileInfo = await createRes.json();
-      const fileId = fileInfo.id;
-
-      const uploadRes = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/pdf',
-        },
-        body: pdfData.blob,
+        body: multipartBlob,
       });
 
       if (!uploadRes.ok) {
         const errJson = await uploadRes.json().catch(() => ({}));
-        throw new Error(errJson.error?.message || "구글 드라이브 파일 내용 업로드에 실패했습니다.");
+        throw new Error(errJson.error?.message || "구글 드라이브 파일 업로드에 실패했습니다.");
       }
+
+      const fileInfo = await uploadRes.json();
+      const fileId = fileInfo.id;
 
       const userEmail = currentUser.email?.toLowerCase().trim() || '';
       const targetEmail = 'swrise2025@gmail.com';
