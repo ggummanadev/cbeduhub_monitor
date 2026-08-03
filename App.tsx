@@ -230,14 +230,19 @@ function App() {
       "학습자수(명)",
       "강사 성명",
       "학습매니저/보조강사 성명",
-      "종합 평균점수",
-      ...EVALUATION_QUESTIONS.map((_, i) => `평가항목 ${i+1}`),
+      "만족도 조사 평균 점수 (5점 만점)",
+      "만족도 조사 환산 점수 (100점 만점)",
+      "학습자 교육과정 만족도 점수 (4번 문항)",
+      ...EVALUATION_QUESTIONS.map((q, i) => `평가항목 ${i+1}: ${q}`),
       "기타 의견 및 특이사항"
     ];
 
     const rows = allReports.map(report => {
-      const scoreSum = report.scores.reduce((a, b) => a + (b || 5), 0);
-      const avgScore = (scoreSum / 20).toFixed(2);
+      const validScores = report.scores.map(s => (s && s > 0 ? Number(s) : 5));
+      const scoreSum = validScores.reduce((a, b) => a + b, 0);
+      const avgScore5 = (scoreSum / 20).toFixed(2); // 5.00점 만점 기준 평균
+      const avgScore100 = ((scoreSum / 20) * 20).toFixed(1); // 100점 만점 환산 점수
+      const satisfactionQ4 = report.scores[3] || 5; // 4번 문항: 학습자 교육과정 만족도
       const createdAtStr = new Date(report.createdAt).toLocaleString('ko-KR');
       
       return [
@@ -252,8 +257,10 @@ function App() {
         report.learnerCount,
         report.instructorName,
         report.managerName,
-        avgScore,
-        ...report.scores.map(s => s || 5),
+        avgScore5,
+        avgScore100,
+        satisfactionQ4,
+        ...validScores,
         report.otherOpinion ? report.otherOpinion.replace(/"/g, '""').replace(/\n/g, ' ') : ''
       ];
     });
@@ -1311,7 +1318,16 @@ function App() {
               </div>
               <h2 className="text-xl font-bold text-slate-800 font-sans tracking-tight">시스템 관리자 로그인</h2>
               <p className="text-xs text-slate-500 mt-1.5 font-medium leading-relaxed">
-                모니터링 보고서 데이터 및 엑셀 다운로드를 위한 통합 대시보드
+                모니터링 보고서 데이터 관리 및 전체 엑셀 다운로드
+              </p>
+            </div>
+
+            <div className="bg-blue-50/80 border border-blue-200/80 rounded-xl p-3.5 text-xs text-blue-900 space-y-1">
+              <p className="font-bold flex items-center gap-1.5 text-blue-800">
+                <ShieldAlert size={14} className="text-blue-600" /> 지정 관리자 계정
+              </p>
+              <p className="text-[11px] text-blue-700 leading-relaxed">
+                등록된 관리자 계정(<span className="font-bold text-blue-900 underline">swrise2025@gmail.com</span>)으로 구글 로그인하시면 통합 대시보드 접근 권한이 부여됩니다.
               </p>
             </div>
 
@@ -1327,7 +1343,7 @@ function App() {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                Google 계정으로 로그인
+                swrise2025@gmail.com 계정으로 로그인
               </button>
 
               {adminError && (
@@ -1356,7 +1372,7 @@ function App() {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-1 rounded-full border border-blue-100 flex items-center gap-1">
-                    <UserCheck size={12} /> swrise2025@gmail.com
+                    <UserCheck size={12} /> {currentGoogleUser?.email || 'swrise2025@gmail.com'}
                   </span>
                   <span className="bg-slate-100 text-slate-700 font-bold text-xs px-2 py-1 rounded">
                     시스템 관리자 모드
