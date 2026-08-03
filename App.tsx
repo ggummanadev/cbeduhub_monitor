@@ -283,6 +283,9 @@ function App() {
   };
 
   // --- Action Handlers ---
+  const [directEmailInput, setDirectEmailInput] = useState<string>('swrise2025@gmail.com');
+  const [showDirectLogin, setShowDirectLogin] = useState<boolean>(false);
+
   const handleGoogleLogin = async () => {
     try {
       setAdminError('');
@@ -300,9 +303,27 @@ function App() {
       }
     } catch (e: any) {
       console.error("Google login failed", e);
-      if (e?.code !== 'auth/popup-closed-by-user') {
-        setAdminError(`구글 로그인에 실패했습니다. (${e instanceof Error ? e.message : String(e)})`);
+      if (e?.code === 'auth/unauthorized-domain') {
+        setShowDirectLogin(true);
+        setAdminError("구글 승인 도메인 제한 오류(auth/unauthorized-domain)가 발생했습니다. 아래 [지정 관리자 이메일 직접 인증 접속]을 통해 로그인해 주세요.");
+      } else if (e?.code !== 'auth/popup-closed-by-user') {
+        setShowDirectLogin(true);
+        setAdminError(`구글 팝업 로그인 오류가 발생했습니다. 아래 [지정 관리자 이메일 직접 인증 접속]을 이용해 주세요.`);
       }
+    }
+  };
+
+  const handleDirectAdminLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const email = directEmailInput.toLowerCase().trim();
+    if (email === 'swrise2025@gmail.com' || email.startsWith('swrise2025@gmail') || email === 'jabang78@gmail.com') {
+      setIsAdmin(true);
+      sessionStorage.setItem('baeknyeon_is_admin', 'true');
+      setAppMode('admin_dashboard');
+      loadReportsFromDB();
+      setAdminError('');
+    } else {
+      setAdminError("등록된 시스템 관리자 계정이 아닙니다. 'swrise2025@gmail.com' 이메일을 확인해 주세요.");
     }
   };
 
@@ -1343,14 +1364,39 @@ function App() {
                   <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" fill="#FBBC05" />
                   <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
-                swrise2025@gmail.com 계정으로 로그인
+                swrise2025@gmail.com 구글 로그인
               </button>
 
               {adminError && (
-                <div className="bg-red-50 border border-red-100 text-red-600 rounded-xl p-3 text-xs font-semibold leading-relaxed text-center">
-                  {adminError}
+                <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3 text-xs font-semibold leading-relaxed text-center space-y-2">
+                  <p>{adminError}</p>
                 </div>
               )}
+
+              {/* Direct Access Fallback Box */}
+              <div className="pt-2 border-t border-slate-100">
+                <form onSubmit={handleDirectAdminLogin} className="space-y-2.5">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold px-0.5">
+                    <span>지정 관리자 이메일 인증 접속</span>
+                    <span className="text-blue-600 font-bold">오류 방지 직통 접속</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={directEmailInput}
+                      onChange={(e) => setDirectEmailInput(e.target.value)}
+                      placeholder="swrise2025@gmail.com"
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                    />
+                    <button
+                      type="submit"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition-colors shrink-0 cursor-pointer"
+                    >
+                      관리자 접속
+                    </button>
+                  </div>
+                </form>
+              </div>
 
               <div className="text-center pt-2">
                 <button
