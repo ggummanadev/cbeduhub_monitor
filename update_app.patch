@@ -1,0 +1,36 @@
+--- App.tsx
++++ App.tsx
+@@ -1001,15 +1001,19 @@
+                   onChange={(v) => updateField('learnerCount', v)} 
+                   placeholder="예: 15" 
+                 />
+-                <InputGroup 
+-                  label="강사 성명" 
+-                  value={data.instructorName} 
+-                  onChange={(v) => updateField('instructorName', v)} 
+-                  placeholder="예: 이순신" 
+-                />
+-                <InputGroup 
+-                  label="학습매니저/보조강사 성명" 
+-                  value={data.managerName} 
+-                  onChange={(v) => updateField('managerName', v)} 
+-                  placeholder="예: 김좌진" 
+-                />
++                <div className="md:col-span-2 lg:col-span-1">
++                  <InputGroup 
++                    label="강사 성명" 
++                    value={data.instructorName} 
++                    onChange={(v) => updateField('instructorName', v)} 
++                    placeholder="예: 이순신" 
++                  />
++                </div>
++                <div className="md:col-span-2 lg:col-span-2">
++                  <InputGroup 
++                    label="학습매니저/보조강사 성명" 
++                    value={data.managerName} 
++                    onChange={(v) => updateField('managerName', v)} 
++                    placeholder="예: 김좌진" 
++                  />
++                </div>
+               </div>
+             </section>

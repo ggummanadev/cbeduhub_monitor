@@ -72,9 +72,9 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             <table className="w-full border-collapse border-2 border-black text-xs mb-3 text-left table-fixed">
               <colgroup>
                 <col style={{ width: '15%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '18%' }} />
+                <col style={{ width: '10%' }} />
                 <col style={{ width: '25%' }} />
+                <col style={{ width: '20%' }} />
                 <col style={{ width: '30%' }} />
               </colgroup>
               <tbody>

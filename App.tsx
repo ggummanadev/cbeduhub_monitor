@@ -1001,18 +1001,22 @@ function App() {
                   onChange={(v) => updateField('learnerCount', v)} 
                   placeholder="예: 15" 
                 />
-                <InputGroup 
-                  label="강사 성명" 
-                  value={data.instructorName} 
-                  onChange={(v) => updateField('instructorName', v)} 
-                  placeholder="예: 이순신" 
-                />
-                <InputGroup 
-                  label="학습매니저/보조강사 성명" 
-                  value={data.managerName} 
-                  onChange={(v) => updateField('managerName', v)} 
-                  placeholder="예: 김좌진" 
-                />
+                <div className="md:col-span-2">
+                  <InputGroup 
+                    label="강사 성명" 
+                    value={data.instructorName} 
+                    onChange={(v) => updateField('instructorName', v)} 
+                    placeholder="예: 이순신" 
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <InputGroup 
+                    label="학습매니저/보조강사 성명" 
+                    value={data.managerName} 
+                    onChange={(v) => updateField('managerName', v)} 
+                    placeholder="예: 김좌진" 
+                  />
+                </div>
               </div>
             </section>
 
@@ -1174,27 +1178,6 @@ function App() {
                 )}
               </div>
 
-              {/* Generate PDF Button */}
-              <button 
-                onClick={generatePDF}
-                disabled={isGenerating}
-                className={`w-full py-4 rounded-xl font-bold text-white text-lg flex items-center justify-center gap-2 shadow-lg transition-all transform active:scale-95 cursor-pointer ${
-                  isGenerating ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/25'
-                }`}
-              >
-                {isGenerating ? (
-                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> PDF 보고서 만드는 중...</span>
-                ) : (
-                  <>
-                    <FileDown size={18} /> PDF 문서로 저장 및 열기
-                  </>
-                )}
-              </button>
-              
-              <p className="text-xs text-slate-400 text-center leading-relaxed mt-2">
-                저장된 PDF 파일은 **기기에 다운로드**되며 <br />
-                모바일 화면에서 **자동으로 실행**되어 즉시 확인할 수 있습니다.
-              </p>
             </div>
 
             {/* Real PDF Layout Preview Section */}
@@ -1249,83 +1232,37 @@ function App() {
               </div>
             </div>
 
-            {/* Google Drive Submission Section */}
-            <div id="drive-submission-section" className="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 p-6 rounded-2xl shadow-sm space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="bg-indigo-600 text-white p-1.5 rounded-lg">
-                  <FolderOpen size={18} />
-                </span>
-                <div>
-                  <h3 className="font-black text-slate-800 text-sm leading-tight">서원대학교 평생교육원 구글 드라이브 제출</h3>
-                  <p className="text-[10px] text-indigo-600 font-bold mt-0.5">Google Drive Direct Submission</p>
-                </div>
-              </div>
-
-              <p className="text-xs text-slate-600 leading-relaxed">
-                '보고서 제출' 버튼을 누르면 로그인한 구글 계정을 통해 서원대학교 평생교육진흥본부(<span className="font-semibold text-slate-800">swrise2025@gmail.com</span>)의 구글 드라이브로 보고서 PDF 파일이 즉시 자동 전송 및 저장됩니다.
-              </p>
-
-              {currentGoogleUser ? (
-                <div className="flex items-center justify-between bg-white border border-slate-100 p-2.5 rounded-xl text-xs">
-                  <div className="flex items-center gap-2">
-                    {currentGoogleUser.photoURL ? (
-                      <img src={currentGoogleUser.photoURL} alt="Profile" className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
-                    ) : (
-                      <span className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold">G</span>
-                    )}
-                    <div>
-                      <p className="font-bold text-slate-800">{currentGoogleUser.displayName || 'Google 사용자'}</p>
-                      <p className="text-[10px] text-slate-400">{currentGoogleUser.email}</p>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={async () => {
-                      await logoutUser();
-                      setGoogleAccessToken(null);
-                    }}
-                    className="text-[10px] font-bold text-red-500 hover:text-red-700 bg-red-50 px-2 py-1 rounded hover:bg-red-100 transition-colors cursor-pointer"
-                  >
-                    로그아웃
-                  </button>
-                </div>
-              ) : (
-                <p className="text-[11px] text-amber-600 font-medium bg-amber-50 border border-amber-100 p-2.5 rounded-xl">
-                  ※ 제출을 위해 본인의 Google 계정 인증 및 드라이브 저장 권한 승인이 필요합니다.
-                </p>
-              )}
-
-              {/* Submit to Drive Button */}
+            {/* Action Buttons Section */}
+            <div className="pt-6 space-y-3 border-t border-slate-200">
+              {/* Edit Button */}
               <button 
-                onClick={submitReportToDrive}
-                disabled={isSubmittingDrive}
-                className={`w-full py-4 rounded-xl font-black text-white text-lg flex items-center justify-center gap-2 shadow-lg transition-all transform active:scale-95 cursor-pointer ${
-                  isSubmittingDrive ? 'bg-slate-400 cursor-not-allowed animate-pulse' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/25'
+                onClick={() => setAppMode('editor')}
+                className="w-full py-3.5 rounded-xl font-bold text-amber-900 bg-amber-400 hover:bg-amber-500 text-lg flex items-center justify-center gap-2 shadow-md transition-all transform active:scale-95 cursor-pointer"
+              >
+                <Edit size={18} /> 내용 수정하기
+              </button>
+
+              {/* Generate PDF Button */}
+              <button 
+                onClick={generatePDF}
+                disabled={isGenerating}
+                className={`w-full py-4 rounded-xl font-bold text-white text-lg flex items-center justify-center gap-2 shadow-lg transition-all transform active:scale-95 cursor-pointer ${
+                  isGenerating ? 'bg-slate-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/25'
                 }`}
               >
-                {isSubmittingDrive ? (
-                  <span className="flex items-center gap-2"><FolderOpen size={20} className="animate-spin" /> 구글 드라이브로 제출 중...</span>
+                {isGenerating ? (
+                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> PDF 보고서 만드는 중...</span>
                 ) : (
                   <>
-                    <FolderOpen size={20} /> 보고서 제출 (swrise2025@gmail.com)
+                    <FileDown size={18} /> PDF 문서로 저장 및 열기
                   </>
                 )}
               </button>
-
-              {/* Success/Error Alerts */}
-              {driveSubmitSuccess && (
-                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl text-xs space-y-1.5 animate-fadeIn">
-                  <p className="font-bold flex items-center gap-1.5"><CheckCircle size={14} className="text-emerald-600" /> 제출 성공!</p>
-                  <p className="leading-relaxed">{driveSubmitSuccess}</p>
-                </div>
-              )}
-
-              {driveSubmitError && (
-                <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl text-xs space-y-1.5 animate-fadeIn">
-                  <p className="font-bold flex items-center gap-1.5"><ShieldAlert size={14} className="text-rose-600" /> 제출 실패</p>
-                  <p className="leading-relaxed">{driveSubmitError}</p>
-                  <p className="text-[10px] text-rose-500 font-medium">※ 다시 시도해주시거나 로그인 계정을 확인해 주세요.</p>
-                </div>
-              )}
+              
+              <p className="text-xs text-slate-400 text-center leading-relaxed mt-2">
+                저장된 PDF 파일은 **기기에 다운로드**되며 <br />
+                모바일 화면에서 **자동으로 실행**되어 즉시 확인할 수 있습니다.
+              </p>
             </div>
           </div>
         )}
