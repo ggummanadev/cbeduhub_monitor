@@ -20,8 +20,8 @@ export const InputGroup: React.FC<InputGroupProps> = ({
       <div className="bg-white p-3">
         {multiline ? (
           <textarea
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
+            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed text-sm"
+            rows={8}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}

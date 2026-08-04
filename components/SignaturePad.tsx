@@ -151,11 +151,11 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ label, signatureData
       {/* Signature Canvas / Image Area */}
       <div className="bg-white p-4">
         {isEditing ? (
-          <div className="border border-dashed border-slate-300 rounded-xl overflow-hidden bg-slate-50 h-[150px] relative">
+          <div className="border border-dashed border-slate-300 rounded-xl overflow-hidden bg-slate-50 h-[300px] relative">
             <canvas 
               ref={canvasRef}
-              width={600}
-              height={300}
+              width={1200}
+              height={600}
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -166,13 +166,13 @@ export const SignaturePad: React.FC<SignaturePadProps> = ({ label, signatureData
               className="w-full h-full cursor-crosshair touch-none"
             />
             {!hasDrawings && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 text-xs">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 text-sm">
                 여기에 손가락이나 펜으로 이름을 정자로 쓰세요.
               </div>
             )}
           </div>
         ) : (
-          <div className="border border-slate-100 rounded-xl overflow-hidden bg-slate-50/50 h-[150px] flex items-center justify-center relative">
+          <div className="border border-slate-100 rounded-xl overflow-hidden bg-slate-50/50 h-[300px] flex items-center justify-center relative">
             {signatureData ? (
               <img src={signatureData} alt="서명 이미지" className="max-h-full max-w-full object-contain p-2" />
             ) : (

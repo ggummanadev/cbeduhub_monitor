@@ -89,6 +89,8 @@ function App() {
     data.photo2 ||
     data.photo3 ||
     data.photo4 ||
+    data.photo5 ||
+    data.photo6 ||
     data.submitterSign
   );
   
@@ -174,12 +176,14 @@ function App() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 
       // Separately cache photos by report ID to persist across list selections & saves
-      if (data.photo1 || data.photo2 || data.photo3 || data.photo4) {
+      if (data.photo1 || data.photo2 || data.photo3 || data.photo4 || data.photo5 || data.photo6) {
         localStorage.setItem(`baeknyeon_photos_${data.id}`, JSON.stringify({
           photo1: data.photo1,
           photo2: data.photo2,
           photo3: data.photo3,
           photo4: data.photo4,
+          photo5: data.photo5,
+          photo6: data.photo6,
         }));
       }
     }
@@ -283,9 +287,6 @@ function App() {
   };
 
   // --- Action Handlers ---
-  const [directEmailInput, setDirectEmailInput] = useState<string>('swrise2025@gmail.com');
-  const [showDirectLogin, setShowDirectLogin] = useState<boolean>(false);
-
   const handleGoogleLogin = async () => {
     try {
       setAdminError('');
@@ -299,31 +300,13 @@ function App() {
         loadReportsFromDB();
       } else {
         await logoutUser();
-        setAdminError("등록된 시스템 관리자 계정이 아닙니다. 'swrise2025@gmail.com' 계정으로 로그인해 주세요.");
+        setAdminError("등록된 시스템 관리자 계정이 아닙니다. 'swrise2025@gmail.com' 구글 계정으로 로그인해 주세요.");
       }
     } catch (e: any) {
       console.error("Google login failed", e);
-      if (e?.code === 'auth/unauthorized-domain') {
-        setShowDirectLogin(true);
-        setAdminError("구글 승인 도메인 제한 오류(auth/unauthorized-domain)가 발생했습니다. 아래 [지정 관리자 이메일 직접 인증 접속]을 통해 로그인해 주세요.");
-      } else if (e?.code !== 'auth/popup-closed-by-user') {
-        setShowDirectLogin(true);
-        setAdminError(`구글 팝업 로그인 오류가 발생했습니다. 아래 [지정 관리자 이메일 직접 인증 접속]을 이용해 주세요.`);
+      if (e?.code !== 'auth/popup-closed-by-user') {
+        setAdminError(`구글 로그인에 실패했습니다. (${e instanceof Error ? e.message : String(e)})`);
       }
-    }
-  };
-
-  const handleDirectAdminLogin = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    const email = directEmailInput.toLowerCase().trim();
-    if (email === 'swrise2025@gmail.com' || email.startsWith('swrise2025@gmail') || email === 'jabang78@gmail.com') {
-      setIsAdmin(true);
-      sessionStorage.setItem('baeknyeon_is_admin', 'true');
-      setAppMode('admin_dashboard');
-      loadReportsFromDB();
-      setAdminError('');
-    } else {
-      setAdminError("등록된 시스템 관리자 계정이 아닙니다. 'swrise2025@gmail.com' 이메일을 확인해 주세요.");
     }
   };
 
@@ -401,16 +384,20 @@ function App() {
         photo2: data.photo2,
         photo3: data.photo3,
         photo4: data.photo4,
+        photo5: data.photo5,
+        photo6: data.photo6,
       };
       setData(updatedData);
 
       // Explicitly cache photos by this report ID so they persist
-      if (data.photo1 || data.photo2 || data.photo3 || data.photo4) {
+      if (data.photo1 || data.photo2 || data.photo3 || data.photo4 || data.photo5 || data.photo6) {
         localStorage.setItem(`baeknyeon_photos_${data.id}`, JSON.stringify({
           photo1: data.photo1,
           photo2: data.photo2,
           photo3: data.photo3,
           photo4: data.photo4,
+          photo5: data.photo5,
+          photo6: data.photo6,
         }));
       }
       
@@ -878,22 +865,6 @@ function App() {
               </button>
             </div>
 
-            {/* Filter Toggle tabs (Mine vs All) */}
-            <div className="bg-slate-200/60 p-1 rounded-xl grid grid-cols-2 text-center text-xs font-bold mb-4">
-              <button 
-                onClick={() => setListFilter('mine')}
-                className={`py-2 rounded-lg transition-all cursor-pointer ${listFilter === 'mine' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-500'}`}
-              >
-                내가 작성한 보고서
-              </button>
-              <button 
-                onClick={() => setListFilter('all')}
-                className={`py-2 rounded-lg transition-all cursor-pointer ${listFilter === 'all' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-500'}`}
-              >
-                전체 보고서 목록
-              </button>
-            </div>
-
             {isLoadingList ? (
               <div className="text-center py-20 text-slate-400">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
@@ -1053,7 +1024,7 @@ function App() {
             {/* Step Content: Photos Attachment */}
             <section className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
               <h3 className="text-sm font-extrabold text-blue-700 border-b pb-1.5 flex items-center gap-1.5">
-                <Eye size={16} /> 4. 모니터링 현장 사진 첨부 (A4 한 장에 4장 부착)
+                <Eye size={16} /> 4. 모니터링 현장 사진 첨부 (총 6장 부착)
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed mb-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
                 스마트폰 카메라로 직접 촬영하거나 갤러리에서 사진을 선택해주세요. 각 슬롯의 조건에 맞는 사진을 권장합니다.
@@ -1082,6 +1053,18 @@ function App() {
                   label="4. 학습매니저(보조강사)가 학습자 도움을 주고 있는 사진"
                   imageData={data.photo4}
                   onImageChange={(img) => updateField('photo4', img)}
+                  existingFileNames={[]}
+                />
+                <ImageUpload 
+                  label="5. 모니터링요원 앞모습과 학습자 뒷모습 모두 보이는 사진"
+                  imageData={data.photo5}
+                  onImageChange={(img) => updateField('photo5', img)}
+                  existingFileNames={[]}
+                />
+                <ImageUpload 
+                  label="6. 모니터링요원 앞모습과 강의 시설이 보이는 사진"
+                  imageData={data.photo6}
+                  onImageChange={(img) => updateField('photo6', img)}
                   existingFileNames={[]}
                 />
               </div>
@@ -1309,31 +1292,6 @@ function App() {
                   <p>{adminError}</p>
                 </div>
               )}
-
-              {/* Direct Access Fallback Box */}
-              <div className="pt-2 border-t border-slate-100">
-                <form onSubmit={handleDirectAdminLogin} className="space-y-2.5">
-                  <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold px-0.5">
-                    <span>지정 관리자 이메일 인증 접속</span>
-                    <span className="text-blue-600 font-bold">오류 방지 직통 접속</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="email"
-                      value={directEmailInput}
-                      onChange={(e) => setDirectEmailInput(e.target.value)}
-                      placeholder="swrise2025@gmail.com"
-                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition-colors shrink-0 cursor-pointer"
-                    >
-                      관리자 접속
-                    </button>
-                  </div>
-                </form>
-              </div>
 
               <div className="text-center pt-2">
                 <button

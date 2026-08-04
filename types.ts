@@ -24,11 +24,13 @@ export interface MonitoringReport {
   submitterPhone?: string; // 모니터링 담당자 연락처 (전화번호)
   submitterSign: string | null; // 모니터링 담당자 서명 (Base64)
   
-  // 4 Photos required
+  // 6 Photos required
   photo1: string | null; // 1. 강사 앞모습과 학습자 뒷모습 모두 보이는 사진
   photo2: string | null; // 2. 강사 앞모습과 강사 교안이 모두 보이는 사진
-  photo3: string | null; // 3. 학습매니저(보조강사) 앞모습과 학습자 뒷모습이 모두 보이는 사진
-  photo4: string | null; // 4. 학습매니저(보조강사) 가 학습자 도움을 주고 있는 사진
+  photo3: string | null; // 3. 학습매니저(보조강사) 앞모습과 학습자 뒷모습 모두 보이는 사진
+  photo4: string | null; // 4. 학습매니저(보조강사)가 학습자 도움을 주고 있는 사진
+  photo5: string | null; // 5. 모니터링요원 앞모습과 학습자 뒷모습 모두 보이는 사진
+  photo6: string | null; // 6. 모니터링요원 앞모습과 강의 시설이 보이는 사진
 }
 
 export const EVALUATION_QUESTIONS = [
@@ -74,5 +76,7 @@ export const initialReport = (deviceId: string = ''): MonitoringReport => ({
   photo1: null,
   photo2: null,
   photo3: null,
-  photo4: null
+  photo4: null,
+  photo5: null,
+  photo6: null
 });

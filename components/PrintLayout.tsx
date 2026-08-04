@@ -135,7 +135,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 <div className="flex bg-white">
                   <div className="w-full p-2 text-left">
                     <span className="font-bold text-xs text-gray-700 block mb-1">〈기타 의견〉</span>
-                    <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[50px] p-1">
+                    <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[100px] p-1">
                       {data.otherOpinion || '특이사항 및 모니터링 의견 없음.'}
                     </div>
                   </div>
@@ -157,9 +157,9 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 <span className="font-semibold text-gray-900 border-b border-gray-400 pb-0.5 px-4 min-w-[80px] text-center">
                   {data.submitterName || '-'}
                 </span>
-                <div className="relative border border-dashed border-gray-300 w-24 h-12 flex items-center justify-center bg-gray-50 rounded">
+                <div className="relative border border-dashed border-gray-300 w-48 h-16 flex items-center justify-center bg-gray-50 rounded">
                   {data.submitterSign ? (
-                    <img src={data.submitterSign} alt="담당자 서명" className="h-full object-contain max-h-10" />
+                    <img src={data.submitterSign} alt="담당자 서명" className="h-full object-contain max-h-14" />
                   ) : (
                     <span className="text-[10px] text-gray-400">(서명 없음)</span>
                   )}
@@ -190,69 +190,101 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 </div>
               </div>
 
-              {/* Right Column: 2x2 Grid with descriptions */}
-              <div className="flex-grow grid grid-cols-2 grid-rows-2">
+              {/* Right Column: 2x3 Grid with descriptions */}
+              <div className="flex-grow grid grid-cols-2 grid-rows-3">
                 {/* Photo 1 */}
-                <div className="border-r border-b border-black p-3 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[68mm]">
+                <div className="border-r border-b border-black p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
                     {data.photo1 ? (
-                      <img src={data.photo1} alt="사진 1" className="max-h-[64mm] w-auto max-w-full object-contain" />
+                      <img src={data.photo1} alt="사진 1" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
-                      <div className="text-center text-gray-400 p-4">
+                      <div className="text-center text-gray-400 p-2">
                         <p className="text-xs font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-2 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-1 rounded">
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 1
                   </div>
                 </div>
  
                 {/* Photo 2 */}
-                <div className="border-b border-black p-3 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[68mm]">
+                <div className="border-b border-black p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
                     {data.photo2 ? (
-                      <img src={data.photo2} alt="사진 2" className="max-h-[64mm] w-auto max-w-full object-contain" />
+                      <img src={data.photo2} alt="사진 2" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
-                      <div className="text-center text-gray-400 p-4">
+                      <div className="text-center text-gray-400 p-2">
                         <p className="text-xs font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-2 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-1 rounded">
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 2
                   </div>
                 </div>
  
                 {/* Photo 3 */}
-                <div className="border-r border-black p-3 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[68mm]">
+                <div className="border-r border-b border-black p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
                     {data.photo3 ? (
-                      <img src={data.photo3} alt="사진 3" className="max-h-[64mm] w-auto max-w-full object-contain" />
+                      <img src={data.photo3} alt="사진 3" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
-                      <div className="text-center text-gray-400 p-4">
+                      <div className="text-center text-gray-400 p-2">
                         <p className="text-xs font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-2 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-1 rounded col-span-2">
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 3
                   </div>
                 </div>
  
                 {/* Photo 4 */}
-                <div className="p-3 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[68mm]">
+                <div className="border-b border-black p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
                     {data.photo4 ? (
-                      <img src={data.photo4} alt="사진 4" className="max-h-[64mm] w-auto max-w-full object-contain" />
+                      <img src={data.photo4} alt="사진 4" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
-                      <div className="text-center text-gray-400 p-4">
+                      <div className="text-center text-gray-400 p-2">
                         <p className="text-xs font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-2 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-1 rounded">
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 4
+                  </div>
+                </div>
+
+                {/* Photo 5 */}
+                <div className="border-r border-black p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                    {data.photo5 ? (
+                      <img src={data.photo5} alt="사진 5" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                    ) : (
+                      <div className="text-center text-gray-400 p-2">
+                        <p className="text-xs font-semibold">사진 미등록</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                    모니터링 증빙사진 5
+                  </div>
+                </div>
+
+                {/* Photo 6 */}
+                <div className="p-2 flex flex-col justify-between bg-white h-full">
+                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                    {data.photo6 ? (
+                      <img src={data.photo6} alt="사진 6" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                    ) : (
+                      <div className="text-center text-gray-400 p-2">
+                        <p className="text-xs font-semibold">사진 미등록</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                    모니터링 증빙사진 6
                   </div>
                 </div>
               </div>
