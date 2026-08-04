@@ -151,7 +151,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
               {reportYear}년 평생교육진흥본부 프로그램 모니터링을 위와 같이 보고합니다.
             </p>
 
-            <div className="flex justify-end items-center mr-6 text-sm">
+            <div className="flex justify-end items-center mr-6 text-sm mb-6">
               <div className="flex items-center gap-4">
                 <span className="font-bold text-gray-700">모니터링 담당자</span>
                 <span className="font-semibold text-gray-900 border-b border-gray-400 pb-0.5 px-4 min-w-[80px] text-center">
@@ -166,6 +166,13 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                   <span className="absolute bottom-0 right-1 text-[8px] text-gray-400">(인)</span>
                 </div>
               </div>
+            </div>
+
+            {/* Footer of Page 1 */}
+            <div className="pt-3 border-t border-gray-200 text-center">
+              <span className="font-bold text-blue-900 text-base">
+                서원대학교 평생교육진흥본부
+              </span>
             </div>
           </div>
         </div>
@@ -293,24 +300,9 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
 
           {/* Footer of Photo Page */}
           <div className="pt-4 mt-auto border-t border-gray-200 text-center">
-            <div className="inline-block" style={{ height: '22px', lineHeight: '22px' }}>
-              <span className="inline-block align-middle mr-2" style={{ height: '22px' }}>
-                {/* Seowon University Lifelong Education Logo */}
-                <svg width="18" height="22" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-                  <defs>
-                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#55B6DC" />
-                      <stop offset="100%" stopColor="#141154" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M 15,0 L 105,0 C 80,40 80,110 105,150 L 15,150 C 40,110 40,40 15,0 Z" fill="url(#logo-grad)" />
-                  <text x="60" y="102" fontFamily="system-ui, -apple-system, sans-serif" fontWeight="900" fontSize="85" fill="#FFFFFF" textAnchor="middle">S</text>
-                </svg>
-              </span>
-              <span className="inline-block align-middle font-bold text-blue-800 text-base" style={{ height: '22px', lineHeight: '22px' }}>
-                서원대학교 평생교육진흥본부
-              </span>
-            </div>
+            <span className="font-bold text-blue-900 text-base">
+              서원대학교 평생교육진흥본부
+            </span>
           </div>
         </div>
 
