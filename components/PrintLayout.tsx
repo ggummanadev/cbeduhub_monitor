@@ -100,46 +100,48 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             </table>
 
             {/* Evaluations Sub-table enclosed by vertically aligned "모니터링 의견" label on left */}
-            <div className="flex border-2 border-black text-[11px]">
-              {/* Left Column: Vertical Header */}
-              <div className="w-10 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-2 leading-relaxed text-[15px] shrink-0">
-                <div style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.25em' }}>
-                  모니터링의견
-                </div>
-              </div>
-
-              {/* Right Column: Dynamic Subtable */}
-              <div className="flex-grow flex flex-col">
+            <table className="w-full border-collapse border-2 border-black text-[11px] text-center table-fixed">
+              <colgroup>
+                <col style={{ width: '40px' }} />
+                <col style={{ width: '32px' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: '64px' }} />
+              </colgroup>
+              <tbody>
                 {/* Header Row */}
-                <div className="flex bg-gray-100 font-bold border-b border-black text-center text-[13px]">
-                  <div className="w-8 border-r border-black py-1.5 shrink-0">No</div>
-                  <div className="flex-grow border-r border-black py-1.5 px-2 text-left">평가 세부내용</div>
-                  <div className="w-16 py-1.5 shrink-0">5점 만점</div>
-                </div>
+                <tr className="bg-gray-100 font-bold text-[13px]">
+                  <td rowSpan={22} className="border border-black bg-gray-100 text-[15px] p-2 align-middle text-center w-10">
+                    <div className="inline-block leading-relaxed" style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.25em' }}>
+                      모니터링의견
+                    </div>
+                  </td>
+                  <td className="border border-black py-1.5 w-8">No</td>
+                  <td className="border border-black py-1.5 px-2 text-left">평가 세부내용</td>
+                  <td className="border border-black py-1.5 w-16">5점 만점</td>
+                </tr>
 
                 {/* 20 Questions Rows */}
                 {EVALUATION_QUESTIONS.map((question, i) => (
-                  <div key={i} className={`flex border-b border-black text-center ${i % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}>
-                    <div className="w-8 border-r border-black py-1 shrink-0 flex items-center justify-center font-semibold">{i + 1}</div>
-                    <div className="flex-grow border-r border-black py-1 px-2 text-left flex items-center">{question}</div>
-                    <div className="w-16 py-1 shrink-0 flex items-center justify-center font-bold text-[13px] text-blue-800">
+                  <tr key={i} className={i % 2 === 1 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="border border-black py-1 font-semibold align-middle">{i + 1}</td>
+                    <td className="border border-black py-1 px-2 text-left align-middle">{question}</td>
+                    <td className="border border-black py-1 font-bold text-[13px] text-blue-800 align-middle">
                       {data.scores[i] || 5}
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ))}
 
                 {/* Other Opinion (기타 의견) */}
-                <div className="flex bg-white">
-                  <div className="w-full p-2 text-left">
+                <tr className="bg-white text-left align-top">
+                  <td colSpan={3} className="border border-black p-2">
                     <span className="font-bold text-[13px] text-gray-700 block mb-1">〈기타 의견〉</span>
                     <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[100px] p-1">
                       {data.otherOpinion || '특이사항 및 모니터링 의견 없음.'}
                     </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Submitter & Declaration Section */}
@@ -183,113 +185,128 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             </h1>
 
             {/* Photos Layout matching the screenshot with a vertical "모니터링 사진" label on the left */}
-            <div className="flex border-2 border-black flex-grow min-h-[180mm]">
-              {/* Left Column: Vertical Header */}
-              <div className="w-12 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-3 leading-loose text-[17px] shrink-0">
-                <div style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.4em' }}>
-                  모니터링사진
-                </div>
-              </div>
-
-              {/* Right Column: 2x3 Grid with descriptions */}
-              <div className="flex-grow grid grid-cols-2 grid-rows-3">
-                {/* Photo 1 */}
-                <div className="border-r border-b border-black p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo1 ? (
-                      <img src={data.photo1} alt="사진 1" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+            <table className="w-full border-collapse border-2 border-black table-fixed h-[200mm]">
+              <colgroup>
+                <col style={{ width: '48px' }} />
+                <col style={{ width: 'auto' }} />
+                <col style={{ width: 'auto' }} />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td rowSpan={3} className="border border-black bg-gray-100 text-[17px] p-2 align-middle text-center font-bold w-12">
+                    <div className="inline-block" style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.4em' }}>
+                      모니터링사진
+                    </div>
+                  </td>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 1 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo1 ? (
+                          <img src={data.photo1} alt="사진 1" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 1
-                  </div>
-                </div>
- 
-                {/* Photo 2 */}
-                <div className="border-b border-black p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo2 ? (
-                      <img src={data.photo2} alt="사진 2" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 1
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 2
-                  </div>
-                </div>
- 
-                {/* Photo 3 */}
-                <div className="border-r border-b border-black p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo3 ? (
-                      <img src={data.photo3} alt="사진 3" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+                    </div>
+                  </td>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 2 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo2 ? (
+                          <img src={data.photo2} alt="사진 2" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 3
-                  </div>
-                </div>
- 
-                {/* Photo 4 */}
-                <div className="border-b border-black p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo4 ? (
-                      <img src={data.photo4} alt="사진 4" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 2
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 4
-                  </div>
-                </div>
-
-                {/* Photo 5 */}
-                <div className="border-r border-black p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo5 ? (
-                      <img src={data.photo5} alt="사진 5" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 3 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo3 ? (
+                          <img src={data.photo3} alt="사진 3" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 5
-                  </div>
-                </div>
-
-                {/* Photo 6 */}
-                <div className="p-2 flex flex-col justify-between bg-white h-full">
-                  <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
-                    {data.photo6 ? (
-                      <img src={data.photo6} alt="사진 6" className="max-h-[42mm] w-auto max-w-full object-contain" />
-                    ) : (
-                      <div className="text-center text-gray-400 p-2">
-                        <p className="text-[13px] font-semibold">사진 미등록</p>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 3
                       </div>
-                    )}
-                  </div>
-                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
-                    모니터링 증빙사진 6
-                  </div>
-                </div>
-              </div>
-            </div>
+                    </div>
+                  </td>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 4 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo4 ? (
+                          <img src={data.photo4} alt="사진 4" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 4
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 5 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo5 ? (
+                          <img src={data.photo5} alt="사진 5" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 5
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border border-black p-2 bg-white h-[66mm] align-top">
+                    {/* Photo 6 */}
+                    <div className="flex flex-col justify-between h-full">
+                      <div className="flex-grow flex items-center justify-center overflow-hidden border border-gray-200 rounded bg-gray-50 h-[46mm]">
+                        {data.photo6 ? (
+                          <img src={data.photo6} alt="사진 6" className="max-h-[42mm] w-auto max-w-full object-contain" />
+                        ) : (
+                          <div className="text-center text-gray-400 p-2">
+                            <p className="text-[13px] font-semibold">사진 미등록</p>
+                          </div>
+                        )}
+                      </div>
+                      <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                        모니터링 증빙사진 6
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {/* Footer of Photo Page */}
