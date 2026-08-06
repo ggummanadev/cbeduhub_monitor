@@ -4,11 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>백년서원 강사 확인서</title>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#004aad" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => {
+            console.log('SW registration failed: ', err);
+          });
+        });
+      }
+      
       tailwind.config = {
+
         theme: {
           extend: {
             colors: {
@@ -33,7 +44,41 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #root {
+      visibility: hidden;
+    }
+    .print-wrapper {
+      position: static !important;
+      left: auto !important;
+      top: auto !important;
+      z-index: auto !important;
+    }
+    .print-container, .print-container * {
+      visibility: visible;
+    }
+    .print-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 210mm !important;
+      margin: 0;
+      padding: 0;
+    }
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+  }
+</style>
 </head>
   <body class="bg-gray-100">
     <div id="root"></div>

@@ -54,22 +54,19 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
 
   return (
     // Offscreen or preview rendering container
-    <div style={wrapperStyle}>
+    <div style={wrapperStyle} className={!isPreview ? 'print-wrapper' : ''}>
       <div ref={printRef || undefined} className="bg-white text-black font-sans print-container" style={{ width: '210mm', minHeight: '594mm' }}>
         
         {/* === PAGE 1: MONITORING REPORT === */}
         <div className="page-break py-10 px-20 flex flex-col h-[297mm] relative box-border justify-between" id="print-page-1" style={{ height: '297mm' }}>
           <div>
             {/* Header Title */}
-            <div className="text-center mb-1">
-              <span className="text-sm font-semibold tracking-wide text-gray-700">{reportYear}년 서원대학교 평생교육진흥본부</span>
-            </div>
-            <h1 className="text-2xl font-bold text-center mb-4 pb-2 border-b-4 border-blue-800">
+            <h1 className="text-[25px] font-bold text-center mb-4 pb-2 border-b-4 border-blue-800">
               평생교육진흥본부 프로그램 모니터링 보고서
             </h1>
 
             {/* Program Info Table */}
-            <table className="w-full border-collapse border-2 border-black text-xs mb-3 text-left table-fixed">
+            <table className="w-full border-collapse border-2 border-black text-[13px] mb-3 text-left table-fixed">
               <colgroup>
                 <col style={{ width: '15%' }} />
                 <col style={{ width: '10%' }} />
@@ -103,9 +100,9 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             </table>
 
             {/* Evaluations Sub-table enclosed by vertically aligned "모니터링 의견" label on left */}
-            <div className="flex border-2 border-black text-[10px]">
+            <div className="flex border-2 border-black text-[11px]">
               {/* Left Column: Vertical Header */}
-              <div className="w-10 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-2 leading-relaxed text-sm shrink-0">
+              <div className="w-10 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-2 leading-relaxed text-[15px] shrink-0">
                 <div style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.25em' }}>
                   모니터링의견
                 </div>
@@ -114,7 +111,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
               {/* Right Column: Dynamic Subtable */}
               <div className="flex-grow flex flex-col">
                 {/* Header Row */}
-                <div className="flex bg-gray-100 font-bold border-b border-black text-center text-xs">
+                <div className="flex bg-gray-100 font-bold border-b border-black text-center text-[13px]">
                   <div className="w-8 border-r border-black py-1.5 shrink-0">No</div>
                   <div className="flex-grow border-r border-black py-1.5 px-2 text-left">평가 세부내용</div>
                   <div className="w-16 py-1.5 shrink-0">5점 만점</div>
@@ -125,7 +122,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                   <div key={i} className={`flex border-b border-black text-center ${i % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}>
                     <div className="w-8 border-r border-black py-1 shrink-0 flex items-center justify-center font-semibold">{i + 1}</div>
                     <div className="flex-grow border-r border-black py-1 px-2 text-left flex items-center">{question}</div>
-                    <div className="w-16 py-1 shrink-0 flex items-center justify-center font-bold text-xs text-blue-800">
+                    <div className="w-16 py-1 shrink-0 flex items-center justify-center font-bold text-[13px] text-blue-800">
                       {data.scores[i] || 5}
                     </div>
                   </div>
@@ -134,7 +131,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 {/* Other Opinion (기타 의견) */}
                 <div className="flex bg-white">
                   <div className="w-full p-2 text-left">
-                    <span className="font-bold text-xs text-gray-700 block mb-1">〈기타 의견〉</span>
+                    <span className="font-bold text-[13px] text-gray-700 block mb-1">〈기타 의견〉</span>
                     <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[100px] p-1">
                       {data.otherOpinion || '특이사항 및 모니터링 의견 없음.'}
                     </div>
@@ -147,11 +144,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
 
           {/* Submitter & Declaration Section */}
           <div className="pt-4 border-t border-gray-200">
-            <p className="text-center text-xs font-semibold text-gray-700 mb-6">
+            <p className="text-center text-[13px] font-semibold text-gray-700 mb-6">
               {reportYear}년 평생교육진흥본부 프로그램 모니터링을 위와 같이 보고합니다.
             </p>
 
-            <div className="flex justify-end items-center mr-6 text-sm mb-6">
+            <div className="flex justify-end items-center mr-6 text-[15px] mb-6">
               <div className="flex items-center gap-4">
                 <span className="font-bold text-gray-700">모니터링 담당자</span>
                 <span className="font-semibold text-gray-900 border-b border-gray-400 pb-0.5 px-4 min-w-[80px] text-center">
@@ -161,16 +158,16 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                   {data.submitterSign ? (
                     <img src={data.submitterSign} alt="담당자 서명" className="h-full object-contain max-h-14" />
                   ) : (
-                    <span className="text-[10px] text-gray-400">(서명 없음)</span>
+                    <span className="text-[11px] text-gray-400">(서명 없음)</span>
                   )}
-                  <span className="absolute bottom-0 right-1 text-[8px] text-gray-400">(인)</span>
+                  <span className="absolute bottom-0 right-1 text-[9px] text-gray-400">(인)</span>
                 </div>
               </div>
             </div>
 
             {/* Footer of Page 1 */}
             <div className="pt-3 border-t border-gray-200 text-center">
-              <span className="font-bold text-blue-900 text-base">
+              <span className="font-bold text-blue-900 text-[17px]">
                 서원대학교 평생교육진흥본부
               </span>
             </div>
@@ -181,17 +178,14 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
         <div className="page-break py-10 px-20 flex flex-col h-[297mm] relative box-border justify-between border-t border-gray-200" id="print-page-2" style={{ height: '297mm' }}>
           <div className="flex-grow flex flex-col">
             {/* Title */}
-            <div className="text-center mb-1">
-              <span className="text-sm font-semibold tracking-wide text-gray-700">{reportYear}년 서원대학교 평생교육진흥본부</span>
-            </div>
-            <h1 className="text-2xl font-bold text-center mb-6 pb-2 border-b-4 border-blue-800">
+            <h1 className="text-[25px] font-bold text-center mb-6 pb-2 border-b-4 border-blue-800">
               프로그램 모니터링 사진대지
             </h1>
 
             {/* Photos Layout matching the screenshot with a vertical "모니터링 사진" label on the left */}
             <div className="flex border-2 border-black flex-grow min-h-[180mm]">
               {/* Left Column: Vertical Header */}
-              <div className="w-12 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-3 leading-loose text-base shrink-0">
+              <div className="w-12 bg-gray-100 border-r border-black flex items-center justify-center font-bold text-center p-3 leading-loose text-[17px] shrink-0">
                 <div style={{ writingMode: 'vertical-rl', textOrientation: 'upright', letterSpacing: '0.4em' }}>
                   모니터링사진
                 </div>
@@ -206,11 +200,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo1} alt="사진 1" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 1
                   </div>
                 </div>
@@ -222,11 +216,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo2} alt="사진 2" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 2
                   </div>
                 </div>
@@ -238,11 +232,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo3} alt="사진 3" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 3
                   </div>
                 </div>
@@ -254,11 +248,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo4} alt="사진 4" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 4
                   </div>
                 </div>
@@ -270,11 +264,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo5} alt="사진 5" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 5
                   </div>
                 </div>
@@ -286,11 +280,11 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                       <img src={data.photo6} alt="사진 6" className="max-h-[42mm] w-auto max-w-full object-contain" />
                     ) : (
                       <div className="text-center text-gray-400 p-2">
-                        <p className="text-xs font-semibold">사진 미등록</p>
+                        <p className="text-[13px] font-semibold">사진 미등록</p>
                       </div>
                     )}
                   </div>
-                  <div className="mt-1 text-center text-[10px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
+                  <div className="mt-1 text-center text-[11px] font-bold text-gray-700 bg-gray-100 border border-gray-300 py-0.5 rounded">
                     모니터링 증빙사진 6
                   </div>
                 </div>
@@ -300,7 +294,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
 
           {/* Footer of Photo Page */}
           <div className="pt-4 mt-auto border-t border-gray-200 text-center">
-            <span className="font-bold text-blue-900 text-base">
+            <span className="font-bold text-blue-900 text-[17px]">
               서원대학교 평생교육진흥본부
             </span>
           </div>

@@ -416,69 +416,14 @@ function App() {
 
   // --- PDF Generation ---
   const generatePDF = async () => {
-    if (!printRef.current) return;
     setIsGenerating(true);
-
     try {
       // Give UI time to update
       await new Promise(resolve => setTimeout(resolve, 400));
-
-      const element = printRef.current;
-      const pages = Array.from(element.querySelectorAll('.page-break')) as HTMLElement[];
-      
-      if (pages.length === 0) {
-        throw new Error("출력할 페이지가 없습니다.");
-      }
-
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      for (let i = 0; i < pages.length; i++) {
-        if (i > 0) pdf.addPage();
-        
-        // Render canvas high-quality
-        const canvas = await html2canvas(pages[i], {
-          scale: 2.2, // Clean resolution for printing
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          width: 794,  // A4 Standard
-          height: 1123, // A4 Standard
-          onclone: (clonedDoc) => {
-            const el = clonedDoc.querySelector('.print-container') as HTMLElement;
-            if (el) {
-              el.style.position = 'relative';
-              el.style.left = '0';
-              el.style.top = '0';
-            }
-          }
-        });
-        
-        const imgData = canvas.toDataURL('image/jpeg', 0.9);
-        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-      }
-
-      const cleanProgramName = data.programName.replace(/[\/\\?%*:|"<>]/g, '_');
-      const fileName = `모니터링보고서_${cleanProgramName}_${data.visitDate}.pdf`;
-      
-      // 1. Save and download standardly
-      pdf.save(fileName);
-      
-      // 2. Automatically execute/open the PDF in a new window/tab as requested
-      try {
-        const pdfBlob = pdf.output('blob');
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        window.open(pdfUrl, '_blank');
-      } catch (e) {
-        console.warn("Popup to open PDF was blocked or is not supported inside iframe.", e);
-      }
-
-      alert('PDF 파일이 성공적으로 저장 및 다운로드되었습니다!');
+      window.print();
     } catch (error) {
       console.error(error);
-      alert('PDF 생성 중 오류가 발생했습니다. 모든 이미지가 정상 로드되었는지 확인해주세요.');
+      alert('PDF 생성 중 오류가 발생했습니다.');
     } finally {
       setIsGenerating(false);
     }
@@ -1234,17 +1179,18 @@ function App() {
                 }`}
               >
                 {isGenerating ? (
-                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> PDF 보고서 만드는 중...</span>
+                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> 인쇄 화면 준비 중...</span>
                 ) : (
                   <>
-                    <FileDown size={18} /> PDF 문서로 저장 및 열기
+                    <FileDown size={18} /> 인쇄 및 PDF 문서로 저장
                   </>
                 )}
               </button>
               
-              <p className="text-xs text-slate-400 text-center leading-relaxed mt-2">
-                저장된 PDF 파일은 **기기에 다운로드**되며 <br />
-                모바일 화면에서 **자동으로 실행**되어 즉시 확인할 수 있습니다.
+              <p className="text-xs text-slate-500 text-center leading-relaxed mt-2 bg-slate-100 p-3 rounded-lg">
+                <strong className="text-indigo-600">💡 PDF 저장 방법:</strong> 버튼을 누른 후 나타나는 <strong className="text-slate-700">인쇄 화면</strong>에서 <br/>
+                대상을 <strong className="text-indigo-600">'PDF로 저장'</strong>으로 선택하시면 파일이 다운로드됩니다.<br />
+                (이 방식을 통해 생성된 PDF는 텍스트 복사 및 선택이 가능합니다)
               </p>
             </div>
           </div>
