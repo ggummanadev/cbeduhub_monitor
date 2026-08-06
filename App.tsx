@@ -418,9 +418,19 @@ function App() {
   const generatePDF = async () => {
     setIsGenerating(true);
     try {
-      // Give UI time to update
-      await new Promise(resolve => setTimeout(resolve, 400));
-      window.print();
+      const pdfResult = await generatePDFBlob();
+      if (!pdfResult) throw new Error("PDF 변환용 요소를 찾을 수 없습니다.");
+      
+      const pdfUrl = URL.createObjectURL(pdfResult.blob);
+      const a = document.createElement('a');
+      a.href = pdfUrl;
+      a.download = pdfResult.fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(pdfUrl);
+
+      alert('PDF 파일이 성공적으로 저장 및 다운로드되었습니다!');
     } catch (error) {
       console.error(error);
       alert('PDF 생성 중 오류가 발생했습니다.');
@@ -1179,18 +1189,17 @@ function App() {
                 }`}
               >
                 {isGenerating ? (
-                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> 인쇄 화면 준비 중...</span>
+                  <span className="flex items-center gap-1.5"><FileText size={18} className="animate-spin" /> PDF 보고서 만드는 중...</span>
                 ) : (
                   <>
-                    <FileDown size={18} /> 인쇄 및 PDF 문서로 저장
+                    <FileDown size={18} /> PDF 문서로 저장
                   </>
                 )}
               </button>
               
               <p className="text-xs text-slate-500 text-center leading-relaxed mt-2 bg-slate-100 p-3 rounded-lg">
-                <strong className="text-indigo-600">💡 PDF 저장 방법:</strong> 버튼을 누른 후 나타나는 <strong className="text-slate-700">인쇄 화면</strong>에서 <br/>
-                대상을 <strong className="text-indigo-600">'PDF로 저장'</strong>으로 선택하시면 파일이 다운로드됩니다.<br />
-                (이 방식을 통해 생성된 PDF는 텍스트 복사 및 선택이 가능합니다)
+                <strong className="text-indigo-600">💡 안내:</strong> 버튼을 누르면 문서가 이미지 형태의 PDF로 변환되어 다운로드됩니다.<br/>
+                (생성된 PDF는 기기에 바로 저장됩니다)
               </p>
             </div>
           </div>
