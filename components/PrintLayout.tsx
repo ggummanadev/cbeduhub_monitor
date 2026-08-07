@@ -58,10 +58,17 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
       <div ref={printRef || undefined} className="bg-white text-black font-sans print-container" style={{ width: '210mm', minHeight: '594mm' }}>
         
         {/* === PAGE 1: MONITORING REPORT === */}
-        <div className="page-break py-10 px-20 flex flex-col h-[297mm] relative box-border justify-between" id="print-page-1" style={{ height: '297mm' }}>
-          <div>
+        <div className="page-break py-8 px-20 flex flex-col h-[297mm] relative box-border justify-between overflow-hidden" id="print-page-1" style={{ height: '297mm' }}>
+          <div className="flex-grow flex flex-col">
+            {/* Top Header requested by user */}
+            <div className="text-center mb-2">
+              <span className="font-bold text-blue-900 text-[17px]">
+                서원대학교 평생교육진흥본부
+              </span>
+            </div>
+
             {/* Header Title */}
-            <h1 className="text-[25px] font-bold text-center mb-4 pb-2 border-b-4 border-blue-800">
+            <h1 className="text-[25px] font-bold text-center mb-3 pb-2 border-b-4 border-blue-800">
               평생교육진흥본부 프로그램 모니터링 보고서
             </h1>
 
@@ -135,7 +142,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
                 <tr className="bg-white text-left align-top">
                   <td colSpan={3} className="border border-black p-2">
                     <span className="font-bold text-[13px] text-gray-700 block mb-1">〈기타 의견〉</span>
-                    <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[100px] p-1">
+                    <div className="text-[11px] text-gray-800 leading-relaxed whitespace-pre-wrap min-h-[80px] p-1">
                       {data.otherOpinion || '특이사항 및 모니터링 의견 없음.'}
                     </div>
                   </td>
@@ -145,12 +152,12 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
           </div>
 
           {/* Submitter & Declaration Section */}
-          <div className="pt-4 border-t border-gray-200">
-            <p className="text-center text-[13px] font-semibold text-gray-700 mb-6">
+          <div className="pt-2 border-t border-gray-200">
+            <p className="text-center text-[13px] font-semibold text-gray-700 mb-4">
               {reportYear}년 평생교육진흥본부 프로그램 모니터링을 위와 같이 보고합니다.
             </p>
 
-            <div className="flex justify-end items-center mr-6 text-[15px] mb-6">
+            <div className="flex justify-end items-center mr-6 text-[15px] mb-4">
               <div className="flex items-center gap-4">
                 <span className="font-bold text-gray-700">모니터링 담당자</span>
                 <span className="font-semibold text-gray-900 border-b border-gray-400 pb-0.5 px-4 min-w-[80px] text-center">
@@ -168,7 +175,7 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
             </div>
 
             {/* Footer of Page 1 */}
-            <div className="pt-3 border-t border-gray-200 text-center">
+            <div className="pt-4 mt-auto border-t border-gray-200 text-center">
               <span className="font-bold text-blue-900 text-[17px]">
                 서원대학교 평생교육진흥본부
               </span>
@@ -177,15 +184,15 @@ export const PrintLayout: React.FC<PrintLayoutProps> = ({ data, printRef, isPrev
         </div>
 
         {/* === PAGE 2: MONITORING PHOTOS === */}
-        <div className="page-break py-10 px-20 flex flex-col h-[297mm] relative box-border justify-between border-t border-gray-200" id="print-page-2" style={{ height: '297mm' }}>
+        <div className="page-break py-8 px-20 flex flex-col h-[297mm] relative box-border justify-between border-t border-gray-200 overflow-hidden" id="print-page-2" style={{ height: '297mm' }}>
           <div className="flex-grow flex flex-col">
             {/* Title */}
-            <h1 className="text-[25px] font-bold text-center mb-6 pb-2 border-b-4 border-blue-800">
+            <h1 className="text-[25px] font-bold text-center mb-6 pb-2 border-b-4 border-blue-800 mt-4">
               프로그램 모니터링 사진대지
             </h1>
 
             {/* Photos Layout matching the screenshot with a vertical "모니터링 사진" label on the left */}
-            <table className="w-full border-collapse border-2 border-black table-fixed h-[200mm]">
+            <table className="w-full border-collapse border-2 border-black table-fixed h-[190mm]">
               <colgroup>
                 <col style={{ width: '48px' }} />
                 <col style={{ width: 'auto' }} />
